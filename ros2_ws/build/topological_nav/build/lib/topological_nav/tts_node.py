@@ -21,19 +21,20 @@ class TTSNode(Node):
         threading.Thread(target=self._speak, args=(text,), daemon=True).start()
 
     def _speak(self, text):
-        try:
-            subprocess.run(['espeak', '-s', '140', '-p', '50', text], check=True)
-        except FileNotFoundError:
+        for cmd in (
+            ['spd-say', text],
+            ['espeak', '-s', '140', '-p', '50', text],
+            ['festival', '--tts'],
+        ):
             try:
-                subprocess.run(
-                    ['festival', '--tts'],
-                    input=text.encode(),
-                    check=True,
-                )
-            except FileNotFoundError:
-                self.get_logger().error(
-                    'No TTS engine found. Install espeak: sudo apt install espeak'
-                )
+                if cmd[0] == 'festival':
+                    subprocess.run(cmd, input=text.encode(), timeout=15, check=True)
+                else:
+                    subprocess.run(cmd, timeout=15, check=True)
+                return
+            except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.CalledProcessError):
+                continue
+        self.get_logger().error('No TTS engine found. Run: sudo apt install espeak')
 
 
 def main(args=None):

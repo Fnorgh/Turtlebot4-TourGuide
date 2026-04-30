@@ -33,8 +33,6 @@ KP_ANGULAR        = 1.5
 LINEAR_SPEED      = 0.15
 STOP_HEIGHT_RATIO = 0.80
 MIN_CONF          = 0.25
-SEARCH_TURN_SPEED = 0.0
-QR_STOP_DELAY     = 5.0
 
 GESTURE_ONE   = 1
 GESTURE_TWO   = 2
@@ -102,11 +100,13 @@ class PersonFollowNode(Node):
         self.state          = State.FOLLOWING
         self._frame_count   = 0
         self.PROCESS_EVERY  = 3
-        self.person_visible = False
-        self._had_person    = False
-        self.last_announce  = 0.0
-        self.ANNOUNCE_INTERVAL = 1.0
-        self._stopped_since = None
+        self.person_visible   = False
+        self._had_person      = False
+        self._stopped_since   = None
+        self._last_person_ann = 0.0
+        self._person_lost_at  = 0.0
+        self._turn_timer      = None
+        self._turn_elapsed    = 0.0
 
         # Child processes: {'gesture': Popen, 'qr': Popen}
         self._procs: dict[str, _sp.Popen] = {}
@@ -196,9 +196,31 @@ class PersonFollowNode(Node):
     def qr_callback(self, msg: String):
         if self.state != State.QR_READING:
             return
-        self.get_logger().info(f'QR read: "{msg.data}" → WAITING_GESTURE')
+        self.get_logger().info(f'QR read: "{msg.data}"')
         self._kill_proc('qr')
-        self._enter(State.WAITING_GESTURE)
+        self._speak(msg.data)
+        self._start_180_turn()
+
+    # 180-degree turn after QR read, then wait for gesture
+    _TURN_SPEED    = 0.8          # rad/s
+    _TURN_DURATION = math.pi / 0.8  # ~3.9 s
+
+    def _start_180_turn(self):
+        self._turn_elapsed  = 0.0
+        self._turn_timer    = self.create_timer(0.05, self._turn_tick)
+
+    def _turn_tick(self):
+        self._turn_elapsed += 0.05
+        if self._turn_elapsed >= self._TURN_DURATION:
+            self._turn_timer.cancel()
+            self._turn_timer = None
+            self._publish_stop()
+            self._enter(State.WAITING_GESTURE, announce=False)
+            return
+        cmd = TwistStamped()
+        cmd.header.stamp    = self.get_clock().now().to_msg()
+        cmd.twist.angular.z = self._TURN_SPEED
+        self.cmd_pub.publish(cmd)
 
     # ── Image callback ────────────────────────────────────────────────────────
 
@@ -230,53 +252,46 @@ class PersonFollowNode(Node):
         now = time.time()
 
         if box is None:
+            if self.person_visible:
+                self._person_lost_at = now
             self.person_visible = False
-            if self._had_person:
-                if self._stopped_since is None:
-                    self._stopped_since = now
-                elif now - self._stopped_since >= QR_STOP_DELAY:
-                    self._enter(State.WAITING_GESTURE)
-            cmd = TwistStamped()
-            cmd.twist.angular.z = SEARCH_TURN_SPEED
-            self.cmd_pub.publish(cmd)
+            self._publish_stop()
             return
 
-        if not self.person_visible or (now - self.last_announce) >= self.ANNOUNCE_INTERVAL:
-            self.person_visible = True
-            self._had_person    = True
-            self._stopped_since = None
-            self.last_announce  = now
-            speak = String()
-            speak.data = 'feet detected'
-            self.speak_pub.publish(speak)
+        was_visible = self.person_visible
+        self.person_visible = True
+        self._had_person    = True
+        # Only announce if person was absent long enough to be considered "new"
+        if not was_visible and (now - self._person_lost_at) > 2.0 and \
+                (now - self._last_person_ann) > 5.0:
+            self._last_person_ann = now
+            self._speak('Person detected. Following.')
 
         x1, y1, x2, y2 = box
         cx           = (x1 + x2) / 2.0
         box_h        = y2 - y1
         offset       = (cx / w) - 0.5
-        angular_z    = -KP_ANGULAR * offset
         height_ratio = box_h / h
-        linear_x     = 0.0 if height_ratio >= STOP_HEIGHT_RATIO else LINEAR_SPEED
+
+        if height_ratio >= STOP_HEIGHT_RATIO:
+            self.get_logger().info(
+                f'[FOLLOWING] close enough (h={height_ratio:.2f}) — stopping')
+            self._publish_stop()
+            self._enter(State.WAITING_GESTURE)
+            return
 
         cmd = TwistStamped()
-        cmd.twist.linear.x  = linear_x
-        cmd.twist.angular.z = angular_z
+        cmd.twist.linear.x  = LINEAR_SPEED
+        cmd.twist.angular.z = -KP_ANGULAR * offset
         self.cmd_pub.publish(cmd)
-
-        if linear_x == 0.0:
-            if self._stopped_since is None:
-                self._stopped_since = now
-            elif now - self._stopped_since >= QR_STOP_DELAY:
-                self._enter(State.WAITING_GESTURE)
-        else:
-            self._stopped_since = None
+        self._stopped_since = None
 
         self.get_logger().info(
-            f'[FOLLOWING] offset={offset:+.2f} h={height_ratio:.2f} lin={linear_x:.2f}')
+            f'[FOLLOWING] offset={offset:+.2f} h={height_ratio:.2f} lin={LINEAR_SPEED:.2f}')
 
     # ── State transitions ─────────────────────────────────────────────────────
 
-    def _enter(self, state: State):
+    def _enter(self, state: State, announce: bool = True):
         self.state = state
         self.get_logger().info(f'State → {state.name}')
 
@@ -297,7 +312,8 @@ class PersonFollowNode(Node):
             self._unload_yolo()
             self._kill_proc('qr')
             self._start_proc('gesture', 'gesture_node')
-            self._speak('Stopped. Show 4 fingers for nearest landmark, or 5 to go home.')
+            if announce:
+                self._speak('Stopped. Show 4 fingers for nearest landmark, or 5 to go home.')
 
         elif state == State.NAVIGATING:
             self._publish_stop()

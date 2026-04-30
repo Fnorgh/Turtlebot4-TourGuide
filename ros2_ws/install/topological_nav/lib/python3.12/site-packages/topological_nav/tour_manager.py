@@ -7,8 +7,14 @@ from rclpy.node import Node
 from rclpy.action import ActionClient
 
 from std_msgs.msg import Int32, String, Bool
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, TwistStamped
 from nav2_msgs.action import NavigateToPose
+
+# QR scan sweep parameters
+SCAN_TURN_SPEED = 0.4   # rad/s
+SCAN_LEFT_SECS  = 2.0   # turn left this long (~45 deg)
+SCAN_RIGHT_SECS = 4.0   # turn right this long (~90 deg, crosses center)
+SCAN_TICK_HZ    = 10.0  # sweep timer frequency
 
 # ---------------------------------------------------------------------------
 # Landmark configuration — loaded from landmarks.yaml (written by landmark_saver_node)
@@ -67,11 +73,17 @@ class TourManager(Node):
         self.create_subscription(String, '/qr_detected', self.qr_callback,      10)
 
         # Publishers
-        self.speak_pub    = self.create_publisher(String, '/speak',          10)
-        self.qr_active_pub = self.create_publisher(Bool,  '/qr_scan_active', 10)
+        self.speak_pub     = self.create_publisher(String,       '/speak',          10)
+        self.qr_active_pub = self.create_publisher(Bool,         '/qr_scan_active', 10)
+        self.cmd_pub       = self.create_publisher(TwistStamped, 'cmd_vel',         10)
 
         self.state            = STATE_HOME
         self.current_landmark = None
+
+        # QR sweep state
+        self._scan_timer      = None
+        self._scan_phase      = 0    # 0=left, 1=right, 2=left-back
+        self._scan_phase_secs = 0.0
 
         self.get_logger().info('Tour manager ready')
         self._speak('Tour guide ready. Hold up one, two, or three fingers to go to a landmark.')
@@ -98,6 +110,7 @@ class TourManager(Node):
     def qr_callback(self, msg):
         if self.state != STATE_AT_LANDMARK:
             return
+        self._stop_qr_sweep()
         content     = msg.data
         description = LANDMARK_DESCRIPTIONS.get(content, content)
         self._speak(description)
@@ -128,10 +141,42 @@ class TourManager(Node):
     def _arrived_at_landmark(self):
         self.state = STATE_AT_LANDMARK
         self.get_logger().info(f'Arrived at Landmark {self.current_landmark} — scanning QR')
-        self._speak('Arrived. Scanning the landmark now.')
+        self._speak('Arrived. Looking for the landmark code.')
         msg      = Bool()
         msg.data = True
         self.qr_active_pub.publish(msg)
+        self._start_qr_sweep()
+
+    def _start_qr_sweep(self):
+        self._scan_phase      = 0
+        self._scan_phase_secs = 0.0
+        self._scan_timer = self.create_timer(
+            1.0 / SCAN_TICK_HZ, self._sweep_tick)
+
+    def _sweep_tick(self):
+        dt = 1.0 / SCAN_TICK_HZ
+        self._scan_phase_secs += dt
+
+        # Phase durations: 0=turn left, 1=turn right, 2=turn left back to centre
+        phase_limit = (SCAN_LEFT_SECS, SCAN_RIGHT_SECS, SCAN_LEFT_SECS)
+        directions  = (1.0, -1.0, 1.0)   # positive = left (CCW)
+
+        if self._scan_phase_secs >= phase_limit[self._scan_phase]:
+            self._scan_phase_secs = 0.0
+            self._scan_phase = (self._scan_phase + 1) % 3
+
+        cmd = TwistStamped()
+        cmd.header.stamp    = self.get_clock().now().to_msg()
+        cmd.twist.angular.z = directions[self._scan_phase] * SCAN_TURN_SPEED
+        self.cmd_pub.publish(cmd)
+
+    def _stop_qr_sweep(self):
+        if self._scan_timer is not None:
+            self._scan_timer.cancel()
+            self._scan_timer = None
+        cmd = TwistStamped()
+        cmd.header.stamp = self.get_clock().now().to_msg()
+        self.cmd_pub.publish(cmd)
 
     def _arrived_home(self):
         self.state            = STATE_HOME

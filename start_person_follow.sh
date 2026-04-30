@@ -2,14 +2,20 @@
 # ─────────────────────────────────────────────
 #  CHANGE THESE FOR YOUR ROBOT
 # ─────────────────────────────────────────────
-ROBOT_NAME="softshell"
-ROS_DOMAIN_ID="9"
-ROS_DISCOVERY_SERVER=";;;;;;;;;10.194.16.59:11811;"
+ROBOT_NAME="galapagos"
+ROS_DOMAIN_ID="4"
+ROS_DISCOVERY_SERVER=";;;;10.194.16.39:11811;"
 # ─────────────────────────────────────────────
 
 WS=~/robotics/ros2-topological-mapping-navigation/ros2_ws
 REPO=~/robotics/ros2-topological-mapping-navigation
 MAP=/home/louq0001/map.yaml
+
+unset ROS_LOCALHOST_ONLY
+export ROS_DOMAIN_ID=$ROS_DOMAIN_ID
+export ROS_DISCOVERY_SERVER="$ROS_DISCOVERY_SERVER"
+export ROS_SUPER_CLIENT=True
+ros2 daemon stop; ros2 daemon start
 
 ROS_ENV="unset ROS_LOCALHOST_ONLY && \
 export ROS_DOMAIN_ID=$ROS_DOMAIN_ID && \
@@ -29,11 +35,27 @@ echo "==> Building package..."
 cd $WS && colcon build --base-paths src --packages-select topological_nav
 source $WS/install/setup.bash
 
+# ── Wait for robot to be reachable before starting nav stack ──────────────────
+echo "==> Waiting for robot scan topic (confirms discovery server connected)..."
+WAIT_LIMIT=60
+WAITED=0
+until timeout 2 ros2 topic hz /scan --window 1 2>/dev/null | grep -q "average rate"; do
+    sleep 2
+    WAITED=$((WAITED + 2))
+    if [ $WAITED -ge $WAIT_LIMIT ]; then
+        echo "WARNING: /scan not seen after ${WAIT_LIMIT}s — robot may not be reachable."
+        echo "         Continuing anyway; nav2 may fail to localize."
+        break
+    fi
+    echo "    ... still waiting for /scan ($WAITED s)"
+done
+echo "    Robot scan topic confirmed."
+
 # ── Navigation stack (all-in-one) ─────────────────────────────────────────────
 # localization_nav2.launch.py handles:
 #   t=0s   → localization (map_server + AMCL)
-#   t=20s  → set_initial_pose (same ROS domain as AMCL, waits for map TF)
-#   t=60s  → nav2
+#   t=25s  → set_initial_pose (waits for map TF up to 60 s)
+#   t=90s  → nav2
 echo "==> Starting navigation stack (one terminal)..."
 gnome-terminal --title="Nav Stack" -- bash -c "
 $ROS_ENV
@@ -41,10 +63,10 @@ ros2 launch topological_nav localization_nav2.launch.py map:=$MAP
 exec bash"
 
 # Wait for full nav2 activation:
-#   60s (nav2 launch delay) + ~25s (route_server + lifecycle activation) = ~85s
-echo "    Waiting 90 s for the full nav stack to activate..."
-echo "    (localization t=0s, initial pose t=20s, nav2 t=60s)"
-for i in $(seq 90 -10 10); do
+#   90s (nav2 launch delay) + ~25s (lifecycle activation) = ~115s
+echo "    Waiting 120 s for the full nav stack to activate..."
+echo "    (localization t=0s, initial pose t=25s, nav2 t=90s)"
+for i in $(seq 120 -10 10); do
     echo "    ... $i s remaining"
     sleep 10
 done

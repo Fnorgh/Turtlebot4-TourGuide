@@ -67,7 +67,7 @@ def main(args=None):
     print(f'Setting initial pose: x={x:.3f} y={y:.3f} yaw={math.degrees(yaw):.1f}°')
     print('Publishing to /initialpose until map→base_link TF appears...')
 
-    deadline = time.time() + 30.0   # give up after 30 s
+    deadline = time.time() + 60.0   # give up after 60 s
     published = 0
 
     while time.time() < deadline:

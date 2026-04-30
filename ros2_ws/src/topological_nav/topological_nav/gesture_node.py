@@ -20,6 +20,7 @@ from rclpy.node import Node
 from std_msgs.msg import Int32
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
+from collections import Counter
 import mediapipe as mp
 import time
 

@@ -57,9 +57,9 @@ def generate_launch_description():
         launch_arguments={'map': LaunchConfiguration('map')}.items(),
     )
 
-    # ── Initial pose — fires after AMCL lifecycle activation (~15-20 s) ───────
+    # ── Initial pose — fires after AMCL lifecycle activation (~20-30 s) ───────
     set_initial_pose = TimerAction(
-        period=20.0,
+        period=25.0,
         actions=[
             LogInfo(msg='[nav_stack] Setting initial pose...'),
             Node(
@@ -70,9 +70,9 @@ def generate_launch_description():
         ],
     )
 
-    # ── Nav2 — fires after set_initial_pose has had time to confirm (30 s max) -
+    # ── Nav2 — fires after set_initial_pose has had time to confirm (60 s max) -
     nav2 = TimerAction(
-        period=60.0,
+        period=90.0,
         actions=[
             LogInfo(msg='[nav_stack] Starting nav2...'),
             IncludeLaunchDescription(
