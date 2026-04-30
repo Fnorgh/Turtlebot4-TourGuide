@@ -172,21 +172,10 @@ class PersonFollowNode(Node):
             self._navigate_to(*pose, on_complete=self._arrived_at_landmark)
 
         elif g == GESTURE_FOUR:
-            target = self._closest_landmark()
-            if target is None:
-                self._speak('No landmarks saved yet.')
-                return
-            lm_id, pose = target
-            self.get_logger().info(f'Gesture 4 → closest landmark {lm_id}')
-            self._speak(f'Heading to landmark {lm_id}.')
-            self._enter(State.NAVIGATING)
-            self._navigate_to(*pose, on_complete=self._arrived_at_landmark)
-
-        elif g == GESTURE_FIVE:
             if self.home is None:
                 self._speak('Home position not saved.')
                 return
-            self.get_logger().info('Gesture 5 → going home')
+            self.get_logger().info('Gesture 4 → going home')
             self._speak('Returning home.')
             self._enter(State.GOING_HOME)
             self._navigate_to(*self.home, on_complete=self._arrived_home)
@@ -313,7 +302,7 @@ class PersonFollowNode(Node):
             self._kill_proc('qr')
             self._start_proc('gesture', 'gesture_node')
             if announce:
-                self._speak('Stopped. Show 4 fingers for nearest landmark, or 5 to go home.')
+                self._speak('Stopped. Show 1, 2, or 3 fingers for a landmark, or 4 to go home.')
 
         elif state == State.NAVIGATING:
             self._publish_stop()
