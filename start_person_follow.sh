@@ -2,9 +2,9 @@
 # ─────────────────────────────────────────────
 #  CHANGE THESE FOR YOUR ROBOT
 # ─────────────────────────────────────────────
-ROBOT_NAME="terrapin"
-ROS_DOMAIN_ID="5"
-ROS_DISCOVERY_SERVER=";;;;;10.194.16.38:11811;"
+ROBOT_NAME="leatherback"
+ROS_DOMAIN_ID="6"
+ROS_DISCOVERY_SERVER=";;;;;;10.194.16.40:11811;"
 # ─────────────────────────────────────────────
 
 WS=~/robotics/ros2-topological-mapping-navigation/ros2_ws

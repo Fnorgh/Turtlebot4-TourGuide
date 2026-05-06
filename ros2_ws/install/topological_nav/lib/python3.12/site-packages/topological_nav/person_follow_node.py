@@ -159,6 +159,11 @@ class PersonFollowNode(Node):
         if self.state != State.WAITING_GESTURE:
             return
 
+        # Ignore stale votes for 5 s after entering WAITING_GESTURE
+        if hasattr(self, '_gesture_ready_time') and \
+                self.get_clock().now().nanoseconds / 1e9 < self._gesture_ready_time:
+            return
+
         g = msg.data
 
         if g in (GESTURE_ONE, GESTURE_TWO, GESTURE_THREE):
@@ -304,6 +309,7 @@ class PersonFollowNode(Node):
             self._unload_yolo()
             self._kill_proc('qr')
             self._start_proc('gesture', 'gesture_node')
+            self._gesture_ready_time = self.get_clock().now().nanoseconds / 1e9 + 5.0
             if announce:
                 self._speak('Stopped. Show 1, 2, or 3 fingers for a landmark, or 4 to go home.')
 
