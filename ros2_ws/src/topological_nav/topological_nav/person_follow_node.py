@@ -389,7 +389,17 @@ class PersonFollowNode(Node):
             self._enter(State.WAITING_GESTURE)
             return
         self.get_logger().info('Goal accepted, navigating...')
-        handle.get_result_async().add_done_callback(lambda f: on_complete())
+        handle.get_result_async().add_done_callback(lambda f: self._nav_result(f, on_complete))
+
+    def _nav_result(self, future, on_complete):
+        from action_msgs.msg import GoalStatus
+        status = future.result().status
+        if status == GoalStatus.STATUS_SUCCEEDED:
+            on_complete()
+        else:
+            self.get_logger().error(f'Navigation failed (status={status})')
+            self._speak('Failed. Retrying.')
+            self._enter(State.WAITING_GESTURE)
 
     def _arrived_at_landmark(self):
         self._enter(State.QR_READING)
