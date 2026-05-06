@@ -11,6 +11,7 @@ setup.py
 config/nav2.yaml
 launch/localization_nav2.launch.py
 launch/mapping.launch.xml
+launch/navigation_launch.py
 launch/person_follow.launch.xml
 launch/topological_nav.launch.xml
 resource/topological_nav

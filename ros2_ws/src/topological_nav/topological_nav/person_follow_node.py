@@ -287,6 +287,9 @@ class PersonFollowNode(Node):
         if state == State.FOLLOWING:
             self._kill_proc('gesture')
             self._kill_proc('qr')
+            # Kill any orphaned OS-level processes from previous runs
+            _sp.run(['pkill', '-f', 'gesture_node'], capture_output=True)
+            _sp.run(['pkill', '-f', 'qr_node'],      capture_output=True)
             self._stopped_since = None
             self.person_visible = False
             self._had_person    = False
@@ -358,6 +361,7 @@ class PersonFollowNode(Node):
         self.get_logger().info(f'Waiting for nav2 action server...')
         if not self.nav_client.wait_for_server(timeout_sec=30.0):
             self.get_logger().error('Nav2 not available after 30 s')
+            self._speak('Navigation system not ready. Please try again.')
             self._enter(State.WAITING_GESTURE)
             return
         goal                         = NavigateToPose.Goal()
@@ -375,6 +379,7 @@ class PersonFollowNode(Node):
         handle = future.result()
         if not handle.accepted:
             self.get_logger().error('Navigation goal rejected — re-entering WAITING_GESTURE')
+            self._speak('Navigation not ready yet. Please try again.')
             self._enter(State.WAITING_GESTURE)
             return
         self.get_logger().info('Goal accepted, navigating...')

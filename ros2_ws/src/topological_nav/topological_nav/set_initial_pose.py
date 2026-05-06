@@ -1,29 +1,21 @@
 """
-Publishes the home position from landmarks.yaml as the AMCL initial pose.
-Keeps publishing until AMCL confirms it has a valid pose (map TF appears).
+Triggers AMCL global localization instead of a fixed initial pose.
+Particles are spread across the entire map; AMCL converges as the robot moves.
 """
-import math
-import os
 import time
-import yaml
 
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseWithCovarianceStamped
+from std_srvs.srv import Empty
 import tf2_ros
 
-LANDMARKS_FILE = os.path.expanduser(
-    '~/robotics/ros2-topological-mapping-navigation/landmarks.yaml'
-)
 
-
-class InitialPoseNode(Node):
+class GlobalLocalizationNode(Node):
 
     def __init__(self):
         super().__init__('set_initial_pose')
-        self.pub = self.create_publisher(
-            PoseWithCovarianceStamped, '/initialpose', 10)
-        self.tf_buffer   = tf2_ros.Buffer()
+        self.cli        = self.create_client(Empty, '/reinitialize_global_localization')
+        self.tf_buffer  = tf2_ros.Buffer()
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
     def map_tf_ready(self):
@@ -33,57 +25,40 @@ class InitialPoseNode(Node):
         except Exception:
             return False
 
-    def publish_pose(self, x, y, yaw):
-        msg = PoseWithCovarianceStamped()
-        msg.header.frame_id    = 'map'
-        msg.header.stamp       = rclpy.time.Time().to_msg()  # zero → AMCL uses latest TF
-        msg.pose.pose.position.x    = float(x)
-        msg.pose.pose.position.y    = float(y)
-        msg.pose.pose.orientation.z = math.sin(yaw / 2.0)
-        msg.pose.pose.orientation.w = math.cos(yaw / 2.0)
-        msg.pose.covariance[0]  = 0.25
-        msg.pose.covariance[7]  = 0.25
-        msg.pose.covariance[35] = 0.07
-        self.pub.publish(msg)
-
 
 def main(args=None):
     rclpy.init(args=args)
+    node = GlobalLocalizationNode()
 
-    if not os.path.exists(LANDMARKS_FILE):
-        print('No landmarks.yaml found — skipping initial pose')
-        return
+    print('Waiting for /reinitialize_global_localization service...')
+    deadline = time.time() + 60.0
+    while not node.cli.wait_for_service(timeout_sec=2.0):
+        if time.time() > deadline:
+            print('ERROR: AMCL service not available after 60 s')
+            node.destroy_node()
+            rclpy.shutdown()
+            return
+        print('  still waiting for AMCL...')
 
-    with open(LANDMARKS_FILE) as f:
-        data = yaml.safe_load(f) or {}
-    home = data.get('home')
-    if not home:
-        print('No home position in landmarks.yaml — skipping initial pose')
-        return
+    print('Calling global localization — particles spread across entire map')
+    future = node.cli.call_async(Empty.Request())
+    rclpy.spin_until_future_complete(node, future, timeout_sec=10.0)
+    print('Global localization initialized. Robot will self-localize as it moves.')
 
-    x, y, yaw = home
-    node = InitialPoseNode()
-
-    print(f'Setting initial pose: x={x:.3f} y={y:.3f} yaw={math.degrees(yaw):.1f}°')
-    print('Publishing to /initialpose until map→base_link TF appears...')
-
-    deadline = time.time() + 60.0   # give up after 60 s
-    published = 0
-
+    print('Waiting for map→base_link TF...')
+    deadline = time.time() + 60.0
+    count = 0
     while time.time() < deadline:
         rclpy.spin_once(node, timeout_sec=0.2)
-        node.publish_pose(x, y, yaw)
-        published += 1
-
         if node.map_tf_ready():
-            print(f'map→base_link TF confirmed after {published} publishes. AMCL ready.')
+            print(f'map→base_link TF confirmed. AMCL publishing.')
             break
-
-        if published % 5 == 0:
-            print(f'  still waiting... ({published} publishes sent)')
-        time.sleep(0.5)
+        count += 1
+        if count % 10 == 0:
+            print(f'  still waiting for TF... ({count * 0.2:.0f}s)')
+        time.sleep(0.2)
     else:
-        print('Warning: map TF did not appear within 30 s — nav2 may not navigate correctly')
+        print('Warning: map TF did not appear within 60 s')
 
     node.destroy_node()
     rclpy.shutdown()

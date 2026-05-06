@@ -15,6 +15,7 @@ setup(
             'launch/mapping.launch.xml',
             'launch/person_follow.launch.xml',
             'launch/localization_nav2.launch.py',
+            'launch/navigation_launch.py',
         ]),
         ('share/' + package_name + '/config', [
             'config/nav2.yaml',

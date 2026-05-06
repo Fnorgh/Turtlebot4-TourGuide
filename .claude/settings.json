@@ -6,10 +6,14 @@
       "Bash(ros2 topic *)",
       "Bash(ros2 pkg *)",
       "Bash(dpkg -l)",
-      "Bash(xargs cat *)"
+      "Bash(xargs cat *)",
+      "Read(//opt/ros/jazzy/share/turtlebot4_navigation/launch/**)",
+      "Read(//opt/ros/jazzy/share/nav2_bringup/**)",
+      "Read(//opt/ros/jazzy/share/**)"
     ],
     "additionalDirectories": [
-      "/opt/ros/jazzy/share/turtlebot4_navigation/config"
+      "/opt/ros/jazzy/share/turtlebot4_navigation/config",
+      "/opt/ros/jazzy/share/nav2_bringup/launch"
     ]
   }
 }

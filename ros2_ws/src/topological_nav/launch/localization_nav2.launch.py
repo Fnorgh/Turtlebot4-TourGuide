@@ -77,10 +77,11 @@ def generate_launch_description():
             LogInfo(msg='[nav_stack] Starting nav2...'),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
-                    os.path.join(nav_dir, 'launch', 'nav2.launch.py')
+                    os.path.join(this_dir, 'launch', 'navigation_launch.py')
                 ),
                 launch_arguments={
                     'params_file': os.path.join(this_dir, 'config', 'nav2.yaml'),
+                    'use_composition': 'False',
                 }.items(),
             ),
         ],
