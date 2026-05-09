@@ -1,8 +1,6 @@
-[robotics.pdf](https://github.com/user-attachments/files/27560242/robotics.pdf)
 <div align="center">
 
 # TurtleBot4 Tour Guide
-<img width="610" height="587" alt="nicklayingdown" src="https://github.com/user-attachments/assets/7f082ed4-408d-402d-b0e1-474a36a91014" />
 
 ### Gesture-Controlled Landmark Navigation with ROS 2
 
@@ -22,6 +20,7 @@
 <br/>
 
 [![Read the Docs](https://img.shields.io/badge/Read_the_Docs-700000?style=for-the-badge&logoColor=FDF9D8)](https://github.com/Fnorgh/Turtlebot4-TourGuide/blob/main/manual_guide.md)
+[![Project Poster](https://img.shields.io/badge/Project_Poster-700000?style=for-the-badge&logoColor=FDF9D8)](https://github.com/user-attachments/files/27560242/robotics.pdf)
 
 </div>
 
@@ -85,6 +84,21 @@ QR codes verify landmark arrival and trigger spoken tour descriptions on the con
 </td>
 </tr>
 </table>
+
+---
+
+## Poster
+
+<div align="center">
+
+[![View Poster PDF](https://img.shields.io/badge/Download_Poster_PDF-700000?style=for-the-badge&logoColor=FDF9D8)](https://github.com/user-attachments/files/27560242/robotics.pdf)
+
+<!-- To show a preview image of the poster, drag a screenshot of it into the editor and paste the URL below -->
+<!-- <img src="YOUR_POSTER_SCREENSHOT_URL" width="100%" /> -->
+
+</div>
+
+The project poster covers the full system overview, hardware breakdown, gesture and person detection pipeline, SLAM mapping results, discussion of limitations, and proposed future work. Presented as part of the University of Oklahoma robotics course final project.
 
 ---
 
