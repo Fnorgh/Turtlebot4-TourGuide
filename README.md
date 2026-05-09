@@ -91,14 +91,13 @@ QR codes verify landmark arrival and trigger spoken tour descriptions on the con
 
 <div align="center">
 
-[![View Poster PDF](https://img.shields.io/badge/Download_Poster_PDF-700000?style=for-the-badge&logoColor=FDF9D8)](https://github.com/user-attachments/files/27560242/robotics.pdf)
+[![Download Poster PDF](https://img.shields.io/badge/Download_Poster_PDF-700000?style=for-the-badge&logoColor=FDF9D8)](https://github.com/user-attachments/files/27560242/robotics.pdf)
 
-<!-- To show a preview image of the poster, drag a screenshot of it into the editor and paste the URL below -->
-<!-- <img src="YOUR_POSTER_SCREENSHOT_URL" width="100%" /> -->
+<br/>
+
+[![Poster Preview](https://github.com/user-attachments/assets/c2ec3130-6986-4614-9e79-cee726147861)](https://github.com/user-attachments/files/27560242/robotics.pdf)
 
 </div>
-
-The project poster covers the full system overview, hardware breakdown, gesture and person detection pipeline, SLAM mapping results, discussion of limitations, and proposed future work. Presented as part of the University of Oklahoma robotics course final project.
 
 ---
 
@@ -281,7 +280,13 @@ chmod +x start_mapping.sh start_landmarks.sh start_person_follow.sh
 
 **University of Oklahoma — Robotics Course Project**
 
+<div align="center">
+
+<img src="https://github.com/user-attachments/assets/acbf6701-caab-4ca0-b840-ec71fb1e0c76" width="500" />
+
 Nicholas Louque · Noah Gibson · Jace Rausch
+
+</div>
 
 ---
 
