@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/7da67601-9a57-4d6e-9455-9c5c023634b7
-
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=700000&height=120&text=TurtleBot4%20Tour%20Guide&fontSize=40&fontColor=FDF9D8&fontAlignY=45&desc=Gesture-Controlled%20Landmark%20Navigation%20with%20ROS%202&descSize=15&descColor=e8d9a0&descAlignY=68" width="100%" />
@@ -9,11 +5,7 @@ https://github.com/user-attachments/assets/7da67601-9a57-4d6e-9455-9c5c023634b7
 
 <br/>
 
-
-https://github.com/user-attachments/assets/22ac0e2a-f9b1-444d-b467-b6c9ec6cb7c2
-
-
-<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=15&duration=3500&pause=1200&color=FDF9D8&center=true&vCenter=true&width=700&lines=Gesture+Input+%E2%86%92+Nav2+%E2%86%92+A*+Path+Planning+%E2%86%92+QR+Detection+%E2%86%92+Speech+Output;OAK-D+Pro+Camera+%7C+RPLIDAR+A1+%7C+Raspberry+Pi+4+%7C+Create+3+Base;University+of+Oklahoma+%7C+Nicholas+Louque+%7C+Noah+Gibson+%7C+Jace+Rausch" />
+<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=15&duration=3500&pause=1200&color=700000&center=true&vCenter=true&width=700&lines=Gesture+Input+%E2%86%92+Nav2+%E2%86%92+A*+Path+Planning+%E2%86%92+QR+Detection+%E2%86%92+Speech+Output;OAK-D+Pro+Camera+%7C+RPLIDAR+A1+%7C+Raspberry+Pi+4+%7C+Create+3+Base;University+of+Oklahoma+%7C+Nicholas+Louque+%7C+Noah+Gibson+%7C+Jace+Rausch" />
 
 <br/><br/>
 
@@ -26,7 +18,6 @@ https://github.com/user-attachments/assets/22ac0e2a-f9b1-444d-b467-b6c9ec6cb7c2
 
 <br/>
 
-[![Watch Demo](https://img.shields.io/badge/Watch_Demo-FDF9D8?style=for-the-badge&logoColor=700000)](https://github.com/Fnorgh/Turtlebot4-TourGuide)
 [![Read the Docs](https://img.shields.io/badge/Read_the_Docs-700000?style=for-the-badge&logoColor=FDF9D8)](https://github.com/Fnorgh/Turtlebot4-TourGuide/blob/main/manual_guide.md)
 
 </div>
@@ -35,30 +26,28 @@ https://github.com/user-attachments/assets/22ac0e2a-f9b1-444d-b467-b6c9ec6cb7c2
 
 ## Demo
 
-<div align="center">
+<table>
+<tr>
+<td width="50%" align="center" valign="top">
 
-<!-- ================================================================
-  HOW TO ADD YOUR VIDEO / PHOTO:
+**Full System — Navigation Demo**
 
-  Option A — Drag-and-drop video (recommended):
-    1. Click the pencil icon to edit this README on GitHub
-    2. Drag your .mp4 directly into the text editor
-    3. GitHub generates a URL and pastes it in automatically
+https://github.com/user-attachments/assets/7da67601-9a57-4d6e-9455-9c5c023634b7
 
-  Option B — GIF:
-    <img src="YOUR_GIF_URL" width="100%" />
-    Convert video to GIF free at https://ezgif.com
+*Gesture input through full autonomous navigation, QR scanning, and speech output*
 
-  Option C — Screenshot:
-    Drag a .png/.jpg into the editor to get a hosted GitHub URL
-================================================================ -->
+</td>
+<td width="50%" align="center" valign="top">
 
-<!-- DELETE this placeholder and paste your video or image URL below -->
-<img src="https://placehold.co/800x400/700000/FDF9D8?text=Add+demo+video+or+image+here" width="100%" />
+**SLAM Mapping and Localization**
 
-*Robot navigating to a registered landmark following gesture input — scanning the QR code and delivering spoken tour content.*
+https://github.com/user-attachments/assets/22ac0e2a-f9b1-444d-b467-b6c9ec6cb7c2
 
-</div>
+*LiDAR-based SLAM map building and Nav2 localization in the target environment*
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -271,11 +260,7 @@ chmod +x start_mapping.sh start_landmarks.sh start_person_follow.sh
 
 **University of Oklahoma — Robotics Course Project**
 
-| Name | GitHub |
-|------|--------|
-| Nicholas Louque | [@Fnorgh](https://github.com/Fnorgh) |
-| Noah Gibson | — |
-| Jace Rausch | — |
+Nicholas Louque · Noah Gibson · Jace Rausch
 
 ---
 
