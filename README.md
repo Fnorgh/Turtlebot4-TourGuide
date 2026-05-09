@@ -1,9 +1,17 @@
+
+
+https://github.com/user-attachments/assets/7da67601-9a57-4d6e-9455-9c5c023634b7
+
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=rect&color=700000&height=120&text=TurtleBot4%20Tour%20Guide&fontSize=40&fontColor=FDF9D8&fontAlignY=45&desc=Gesture-Controlled%20Landmark%20Navigation%20with%20ROS%202&descSize=15&descColor=e8d9a0&descAlignY=68" width="100%" />
 <img src="https://placehold.co/1400x6/FDF9D8/FDF9D8" width="100%" />
 
 <br/>
+
+
+https://github.com/user-attachments/assets/22ac0e2a-f9b1-444d-b467-b6c9ec6cb7c2
+
 
 <img src="https://readme-typing-svg.demolab.com?font=Georgia&size=15&duration=3500&pause=1200&color=FDF9D8&center=true&vCenter=true&width=700&lines=Gesture+Input+%E2%86%92+Nav2+%E2%86%92+A*+Path+Planning+%E2%86%92+QR+Detection+%E2%86%92+Speech+Output;OAK-D+Pro+Camera+%7C+RPLIDAR+A1+%7C+Raspberry+Pi+4+%7C+Create+3+Base;University+of+Oklahoma+%7C+Nicholas+Louque+%7C+Noah+Gibson+%7C+Jace+Rausch" />
 
