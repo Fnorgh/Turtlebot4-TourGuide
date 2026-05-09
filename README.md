@@ -1,6 +1,8 @@
+[robotics.pdf](https://github.com/user-attachments/files/27560242/robotics.pdf)
 <div align="center">
 
 # TurtleBot4 Tour Guide
+<img width="610" height="587" alt="nicklayingdown" src="https://github.com/user-attachments/assets/7f082ed4-408d-402d-b0e1-474a36a91014" />
 
 ### Gesture-Controlled Landmark Navigation with ROS 2
 
