@@ -5,7 +5,7 @@
 
 <br/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=15&duration=3500&pause=1200&color=700000&center=true&vCenter=true&width=700&lines=Gesture+Input+%E2%86%92+Nav2+%E2%86%92+A*+Path+Planning+%E2%86%92+QR+Detection+%E2%86%92+Speech+Output;OAK-D+Pro+Camera+%7C+RPLIDAR+A1+%7C+Raspberry+Pi+4+%7C+Create+3+Base;University+of+Oklahoma+%7C+Nicholas+Louque+%7C+Noah+Gibson+%7C+Jace+Rausch" />
+<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=15&duration=3500&pause=1200&color=FDF9D8&center=true&vCenter=true&width=700&lines=Gesture+Input+%E2%86%92+Nav2+%E2%86%92+A*+Path+Planning+%E2%86%92+QR+Detection+%E2%86%92+Speech+Output;OAK-D+Pro+Camera+%7C+RPLIDAR+A1+%7C+Raspberry+Pi+4+%7C+Create+3+Base;University+of+Oklahoma+%7C+Nicholas+Louque+%7C+Noah+Gibson+%7C+Jace+Rausch" />
 
 <br/><br/>
 
