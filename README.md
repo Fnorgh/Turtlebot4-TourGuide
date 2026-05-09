@@ -1,13 +1,14 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=700000&height=120&text=TurtleBot4%20Tour%20Guide&fontSize=40&fontColor=FDF9D8&fontAlignY=45&desc=Gesture-Controlled%20Landmark%20Navigation%20with%20ROS%202&descSize=15&descColor=e8d9a0&descAlignY=68" width="100%" />
-<img src="https://placehold.co/1400x6/FDF9D8/FDF9D8" width="100%" />
+# TurtleBot4 Tour Guide
+
+### Gesture-Controlled Landmark Navigation with ROS 2
+
+---
+
+*Nicholas Louque · Noah Gibson · Jace Rausch — University of Oklahoma*
 
 <br/>
-
-<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=15&duration=3500&pause=1200&color=700000&center=true&vCenter=true&width=700&lines=Gesture+Input+%E2%86%92+Nav2+%E2%86%92+A*+Path+Planning+%E2%86%92+QR+Detection+%E2%86%92+Speech+Output;OAK-D+Pro+Camera+%7C+RPLIDAR+A1+%7C+Raspberry+Pi+4+%7C+Create+3+Base;University+of+Oklahoma+%7C+Nicholas+Louque+%7C+Noah+Gibson+%7C+Jace+Rausch" />
-
-<br/><br/>
 
 ![ROS2](https://img.shields.io/badge/ROS2_Humble-700000?style=flat-square&logo=ros&logoColor=FDF9D8)
 ![Python](https://img.shields.io/badge/Python_3.10+-700000?style=flat-square&logo=python&logoColor=FDF9D8)
@@ -87,10 +88,6 @@ QR codes verify landmark arrival and trigger spoken tour descriptions on the con
 
 ## Hardware
 
-<table>
-<tr>
-<td width="50%" valign="top">
-
 | Component | Role |
 |-----------|------|
 | OAK-D Pro Stereo Camera | Gesture recognition and QR detection |
@@ -98,15 +95,23 @@ QR codes verify landmark arrival and trigger spoken tour descriptions on the con
 | Raspberry Pi 4 (4GB) | Onboard computation |
 | Create 3 Drive Base | Differential drive with encoders, IMU, and safety sensors |
 
-</td>
+<br/>
+
+<table>
+<tr>
 <td width="50%" valign="top">
 
 **Person Detection**
+
 - Detects and tracks the largest person in frame
 - Bounding box center maps to angular velocity
 - Bounding box size maps to distance estimation
 
+</td>
+<td width="50%" valign="top">
+
 **LiDAR Perception**
+
 - Provides real-time distance measurements to obstacles
 - Used for SLAM map building, localization, and avoidance
 
@@ -272,10 +277,3 @@ Nicholas Louque · Noah Gibson · Jace Rausch
 - [YOLOv8 Object Detection — Ultralytics](https://docs.ultralytics.com)
 
 ---
-
-<div align="center">
-
-<img src="https://placehold.co/1400x6/FDF9D8/FDF9D8" width="100%" />
-<img src="https://capsule-render.vercel.app/api?type=rect&color=700000&height=60" width="100%" />
-
-</div>
