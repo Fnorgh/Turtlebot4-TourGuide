@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,60:1a3050,100:58a6ff&height=180&section=header&text=TurtleBot4%20Tour%20Guide&fontSize=40&fontColor=ffffff&fontAlignY=42&desc=Gesture%20%26%20QR-Based%20Landmark%20Navigation%20with%20ROS%202&descSize=15&descColor=8b949e&descAlignY=62" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0d1117,60:1a3050,100:58a6ff&height=180&section=header&text=TurtleBot4%20Tour%20Guide&fontSize=40&fontColor=ffffff&fontAlignY=42&desc=Gesture-Controlled%20Landmark%20Navigation%20with%20ROS%202&descSize=15&descColor=8b949e&descAlignY=62" width="100%" />
 
 <br/>
 
