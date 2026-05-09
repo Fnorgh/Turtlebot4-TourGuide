@@ -276,17 +276,34 @@ chmod +x start_mapping.sh start_landmarks.sh start_person_follow.sh
 
 ---
 
+## Implementation
+
+<table>
+<tr>
+<td width="60%" valign="top">
+
+All code in this repository was written by **Nicholas Louque**.
+
+Noah Gibson and Jace Rausch contributed the project documentation, and written report.
+
+</td>
+<td width="40%" align="center" valign="top">
+
+<img src="https://github.com/user-attachments/assets/acbf6701-caab-4ca0-b840-ec71fb1e0c76" width="260" />
+
+*Nicholas Louque — sole developer*
+
+</td>
+</tr>
+</table>
+
+---
+
 ## Team
 
 **University of Oklahoma — Robotics Course Project**
 
-<div align="center">
-
-<img src="https://github.com/user-attachments/assets/acbf6701-caab-4ca0-b840-ec71fb1e0c76" width="500" />
-
 Nicholas Louque · Noah Gibson · Jace Rausch
-
-</div>
 
 ---
 
